@@ -1,0 +1,23 @@
+#layout {
+    #layout-header {
+        position: fixed;
+        width: 100%;
+        z-index: 11;
+    }
+
+    #layout-body {
+        
+        margin-top: 64px;
+        z-index: 10;
+
+        #layout-sider {
+            height: calc(100vh - 64px);
+            position: fixed;
+        }
+
+        #layout-content {
+            padding: 20px;
+            margin-left: 200px;
+        }
+    }
+}

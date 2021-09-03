@@ -1,0 +1,22 @@
+@import "./base.scss";
+
+.card {
+    .card-item {
+
+        padding: 10px;
+
+        .title {
+            font-size: 14px;
+            color: rgba(0, 0, 0, .45)
+        }
+
+        .con {
+            font-size: 30px;
+        }
+    }
+}
+
+.list {
+    margin-top: 20px;
+    padding: 10px;
+}
