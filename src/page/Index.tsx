@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Tabs, Table, Button, Tag, Tooltip } from "antd";
+import { Row, Col, Tabs, Table, Button, Tag, Tooltip, Progress } from "antd";
 import "@/static/css/Index.scss";
 import axios from "axios";
 import moment from "moment";
@@ -10,13 +10,15 @@ export default class Index extends React.Component<any, any>{
     public state: {
         systemTableLoading: boolean;
         dataSource: Array<any>;
-        testingTimeButtonLoading: any
+        testingTimeButtonLoading: any;
+        testingTimeButtonPercent: any;
     }
 
     constructor(props: any) {
         super(props);
         this.state = {
             testingTimeButtonLoading: {},
+            testingTimeButtonPercent: {},
             systemTableLoading: true,
             dataSource: []
         }
@@ -35,6 +37,15 @@ export default class Index extends React.Component<any, any>{
             width: 200,
             align: 'center' as 'center',
             render: (value: number, row: any) => <><div style={{ textAlign: 'center' }}>{moment.unix(value).format('YYYY-MM-DD HH:mm')}&nbsp;<Button icon={<CaretRightOutlined />} size="small" type="primary" loading={this.state.testingTimeButtonLoading[row.id] === undefined ? false : this.state.testingTimeButtonLoading[row.id]} onClick={() => this.sync(row.id)}>同步</Button></div></>
+
+        },
+        {
+            title: '同步2',
+            dataIndex: 'testing_time',
+            key: 'testing_time',
+            width: 200,
+            align: 'center' as 'center',
+            render: (value: number, row: any) => <><div onClick={() => this.move(row.id)}><Progress percent={this.state.testingTimeButtonPercent[row.id] === undefined ? 0 : this.state.testingTimeButtonPercent[row.id]['speed']} size="small" /></div></>
 
         },
         {
@@ -65,20 +76,48 @@ export default class Index extends React.Component<any, any>{
         });
     }
 
+    move = async (id: number) => {
+        let loading: any = {};
+        loading[id] = {
+            speed: 0,
+            time: null,
+        };
+        this.setState({
+            testingTimeButtonPercent: Object.assign(this.state.testingTimeButtonPercent, loading)
+        })
+
+        await axios.get('http://127.0.0.1:83/bt/system/bd');
+        const timeId = setInterval(async () => {
+            const { data } = await axios.get('http://127.0.0.1:83/bt/system/bdTask');
+            loading[id]['speed'] = data.data['172.200.20.2']['goods2']['speed'];
+            this.setState({
+                testingTimeButtonPercent: Object.assign(this.state.testingTimeButtonPercent, loading)
+            })
+        }, 1000)
+
+        loading[id]['time'] = timeId;
+        this.setState({
+            testingTimeButtonPercent: Object.assign(this.state.testingTimeButtonPercent, loading)
+        })
+    }
+
     sync = async (id: number) => {
         let loading: any = {};
         loading[id] = true;
         this.setState({
             testingTimeButtonLoading: Object.assign(this.state.testingTimeButtonLoading, loading)
         })
-        const data = await axios.post('http://127.0.0.1:83/bt/system/sync?time', { id: id });
-        console.log(data)
-        loading[id] = false;
-        this.setState({
-            testingTimeButtonLoading: Object.assign(this.state.testingTimeButtonLoading, loading)
-        })
+        try {
+            await axios.post('http://127.0.0.1:83/bt/system/sync?time', { id: id });
+            loading[id] = false;
+            this.setState({
+                testingTimeButtonLoading: Object.assign(this.state.testingTimeButtonLoading, loading)
+            })
 
-        this.list();
+            this.list();
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     render = () => {
