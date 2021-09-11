@@ -53,8 +53,13 @@ export default class Sider extends React.Component<any, any>{
                             网站管理
                         </Link>
                     </Menu.Item>
+                    <Menu.Item key="4">
+                        <Link to="/bt/mysql">
+                            数据库管理
+                        </Link>
+                    </Menu.Item>
                 </SubMenu>
-                <SubMenu key="sub2" icon={<AppstoreOutlined />} title="Navigation Two">
+                {/* <SubMenu key="sub2" icon={<AppstoreOutlined />} title="Navigation Two">
                     <Menu.Item key="5">Option 5</Menu.Item>
                     <Menu.Item key="6">Option 6</Menu.Item>
                     <SubMenu key="sub3" title="Submenu">
@@ -73,7 +78,7 @@ export default class Sider extends React.Component<any, any>{
                     <Menu.Item key="14">Option 10</Menu.Item>
                     <Menu.Item key="15">Option 11</Menu.Item>
                     <Menu.Item key="16">Option 12</Menu.Item>
-                </SubMenu>
+                </SubMenu> */}
             </Menu>
         </>
     }

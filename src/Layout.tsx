@@ -4,6 +4,7 @@ import LayoutSider from '@/layout/Sider';
 import Index from "@/page/Index";
 import Domain from "@/page/Domain"
 import BtSystem from "@/page/System"
+import { mysql as BtMysql } from "@/page/bt"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Layout } from "antd";
 const { Header, Sider, Content } = Layout;
@@ -32,6 +33,9 @@ export default class BaseLayout extends React.Component<any, any>{
                                 </Route>
                                 <Route path="/bt/system">
                                     <BtSystem />
+                                </Route>
+                                <Route path="/bt/mysql">
+                                    <BtMysql />
                                 </Route>
                             </Switch>
                         </Content>
