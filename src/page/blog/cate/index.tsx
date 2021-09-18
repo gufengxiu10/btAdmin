@@ -1,6 +1,6 @@
 import React from "react";
 import "@/static/css/blog/cate.scss";
-import { Input, Space, Table, PageHeader, Button, Popconfirm, Modal, Form } from 'antd';
+import { Input, Space, Table, PageHeader, Button, Popconfirm, Modal, Form, message } from 'antd';
 const { Search } = Input
 export default class index extends React.Component<any, any>{
 
@@ -14,6 +14,7 @@ export default class index extends React.Component<any, any>{
             model: {
                 visible: false,
                 okLoading: false,
+                title: true,
                 default: {
                     name: ''
                 },
@@ -27,25 +28,7 @@ export default class index extends React.Component<any, any>{
                         name: 'John Brown',
                         age: 32,
                         address: 'New York No. 1 Lake Park',
-                    },
-                    {
-                        key: 2,
-                        name: 'Joe Black',
-                        age: 42,
-                        address: 'London No. 1 Lake Park',
-                    },
-                    {
-                        key: 3,
-                        name: 'Jim Green',
-                        age: 32,
-                        address: 'Sidney No. 1 Lake Park',
-                    },
-                    {
-                        key: 4,
-                        name: 'Jim Red',
-                        age: 32,
-                        address: 'London No. 2 Lake Park',
-                    },
+                    }
                 ]
             }
         }
@@ -58,19 +41,36 @@ export default class index extends React.Component<any, any>{
     }
 
     componentDidMount = () => {
+        let data: any = [];
+        const { table } = this.state;
+        for (let i = 0; i < 10; i++) {
+            data.push({
+                key: i,
+                name: 'John Brown',
+                age: 32,
+                address: 'New York No. 1 Lake Park',
+                loading: false,
+            });
+        }
+
+        this.setState({
+            table: Object.assign(table, { data: data })
+        })
     }
 
     modelVisible = (row: any = {}) => {
-        const model = {
+        let model = Object.assign(this.state.model, {
             visible: true,
+            title: true,
             okLoading: false,
             default: {
                 name: ""
             }
-        }
+        })
 
-        if (Object.keys(row).length === 0) {
-        } else {
+        if (Object.keys(row).length > 0) {
+            model.default.name = row.name
+            model.title = false
         }
 
         this.formRef.current?.setFieldsValue(model.default);
@@ -127,23 +127,55 @@ export default class index extends React.Component<any, any>{
 
     }
 
+    formRowDangerDel = (row: any) => {
+        const { table } = this.state;
+        this.setState({
+            table: Object.assign(table, {
+                data: table.data.map((item: any) => {
+                    if (item.key === row.key) {
+                        item.loading = true;
+                    }
+                    return item;
+                })
+            })
+        })
+
+        setTimeout(() => {
+            this.setState({
+                table: Object.assign(table, {
+                    data: table.data.filter((item: any) => item.key === row.key ? false : true)
+                })
+            })
+            message.success('删除成功');
+        }, 2000);
+    }
+
     render = () => {
         const columns = [
             {
                 title: '分类名',
                 dataIndex: 'name',
                 key: 'name',
-                width: '30%',
             },
             {
                 title: '创建时间',
                 dataIndex: 'address',
                 key: 'address',
+                width: 300,
             },
             {
                 title: '操作',
                 dataIndex: 'address',
                 key: 'address',
+                width: 150,
+                render: (value: any, row: any) => {
+                    return <Button.Group>
+                        <Button size="small" type="primary" onClick={() => this.modelVisible(row)}>编辑</Button>
+                        <Popconfirm title="是否要删除当前选项?" onConfirm={() => this.formRowDangerDel(row)}>
+                            <Button size="small" type="primary" danger loading={row.loading} >删除</Button>
+                        </Popconfirm>
+                    </Button.Group>
+                }
             }
         ];
 
@@ -152,7 +184,6 @@ export default class index extends React.Component<any, any>{
             selectedRowKeys: table.selectedRowKeys,
             onChange: this.onSelectChange,
         };
-
         return <>
             <div>
                 <div className="layout-content-header">
@@ -185,7 +216,15 @@ export default class index extends React.Component<any, any>{
                             </div>
                         </div>
                         <Table rowSelection={rowSelection} columns={columns} dataSource={this.state.table.data} />
-                        <Modal visible={this.state.model.visible} title="新建" okButtonProps={{ loading: this.state.model.okLoading }} onOk={this.modelOk}>
+                        <Modal
+                            visible={this.state.model.visible}
+                            title={this.state.model.title === true ? "创建" : "编辑"}
+                            okButtonProps={{ loading: this.state.model.okLoading }}
+                            onOk={this.modelOk}
+                            onCancel={() => this.setState({ model: Object.assign(this.state.model, { visible: false }) })}
+                            cancelText="取消"
+                            okText="保存"
+                        >
                             <Form
                                 autoComplete="off"
                                 onFinish={this.formFinish}
