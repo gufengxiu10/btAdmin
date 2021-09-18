@@ -3,6 +3,7 @@
         "antd",
         "appstore",
         "outlined",
+        "popconfirm",
         "poweroff",
         "sider"
     ]

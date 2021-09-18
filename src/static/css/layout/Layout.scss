@@ -6,7 +6,7 @@
     }
 
     #layout-body {
-        
+
         margin-top: 64px;
         z-index: 10;
 
@@ -16,8 +16,16 @@
         }
 
         #layout-content {
-            padding: 20px;
             margin-left: 200px;
+
+            .layout-content-header {
+                background-color: #fff;
+            }
+
+            .layout-content-padding {
+                padding: 20px;
+            }
         }
+
     }
 }

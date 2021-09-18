@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Tabs, Table, Button, Tag, Tooltip, Progress } from "antd";
+import { Row, Col, Tabs, Table, Button, Tag, Tooltip, Progress, Spin } from "antd";
 import "@/static/css/Index.scss";
 import axios from "axios";
 import moment from "moment";
@@ -12,11 +12,20 @@ export default class Index extends React.Component<any, any>{
         dataSource: Array<any>;
         testingTimeButtonLoading: any;
         testingTimeButtonPercent: any;
+        loading: any;
+        config: any;
     }
 
     constructor(props: any) {
         super(props);
         this.state = {
+            loading: {
+                config: true
+            },
+            config: {
+                serverCount: 0,
+                domainCount: 0
+            },
             testingTimeButtonLoading: {},
             testingTimeButtonPercent: {},
             systemTableLoading: true,
@@ -40,15 +49,6 @@ export default class Index extends React.Component<any, any>{
 
         },
         {
-            title: '同步2',
-            dataIndex: 'testing_time',
-            key: 'testing_time',
-            width: 200,
-            align: 'center' as 'center',
-            render: (value: number, row: any) => <><div onClick={() => this.move(row.id)}><Progress percent={this.state.testingTimeButtonPercent[row.id] === undefined ? 0 : this.state.testingTimeButtonPercent[row.id]['speed']} size="small" /></div></>
-
-        },
-        {
             title: '原因',
             dataIndex: 'reason_msg',
             key: 'reason_msg',
@@ -69,36 +69,22 @@ export default class Index extends React.Component<any, any>{
     }
 
     list = async () => {
-        const { data } = await axios.get('http://127.0.0.1:83/bt/system/ipList');
-        this.setState({
-            dataSource: data.data,
-            systemTableLoading: false
-        });
-    }
-
-    move = async (id: number) => {
-        let loading: any = {};
-        loading[id] = {
-            speed: 0,
-            time: null,
-        };
-        this.setState({
-            testingTimeButtonPercent: Object.assign(this.state.testingTimeButtonPercent, loading)
-        })
-
-        await axios.get('http://127.0.0.1:83/bt/system/bd');
-        const timeId = setInterval(async () => {
-            const { data } = await axios.get('http://127.0.0.1:83/bt/system/bdTask');
-            loading[id]['speed'] = data.data['172.200.20.2']['goods2']['speed'];
+        axios.all([axios.get('http://127.0.0.1:83/bt/system/config')]).then(axios.spread((res1: any) => {
             this.setState({
-                testingTimeButtonPercent: Object.assign(this.state.testingTimeButtonPercent, loading)
+                loading: {
+                    config: false
+                },
+                config: {
+                    serverCount: res1.data.data.server_count,
+                    domainCount: res1.data.data.domain_count
+                },
             })
-        }, 1000)
-
-        loading[id]['time'] = timeId;
-        this.setState({
-            testingTimeButtonPercent: Object.assign(this.state.testingTimeButtonPercent, loading)
-        })
+        }));
+        // const { data } = await axios.get('http://127.0.0.1:83/bt/system/ipList');
+        // this.setState({
+        //     dataSource: data.data,
+        //     systemTableLoading: false
+        // });
     }
 
     sync = async (id: number) => {
@@ -126,26 +112,27 @@ export default class Index extends React.Component<any, any>{
                 <Row gutter={16}>
                     <Col span={12} >
                         <div className="card-item">
-                            <div className="title">服务器数</div>
-                            <div className="con">
-                                50
-                            </div>
+                            <Spin tip="Loading..." spinning={this.state.loading.config}>
+                                <div className="title">服务器数</div>
+                                <div className="con">{this.state.config.serverCount}</div>
+                            </Spin>
                         </div>
                     </Col>
                     <Col span={12} >
                         <div className="card-item">
-                            <div className="title">网站总数</div>
-                            <div className="con">
-                                160
-                            </div>
+                            <Spin tip="Loading..." spinning={this.state.loading.config}>
+                                <div className="title">网站总数</div>
+                                <div className="con">{this.state.config.domainCount}</div>
+                            </Spin>
                         </div>
+
                     </Col>
                 </Row>
             </div>
             <div className="list">
                 <Tabs defaultActiveKey="1" >
                     <TabPane tab="服务器" key="1">
-                        <Table dataSource={this.state.dataSource} columns={this.columns} loading={this.state.systemTableLoading} bordered />;
+                        {/* <Table dataSource={this.state.dataSource} columns={this.columns} loading={this.state.systemTableLoading} bordered />; */}
                     </TabPane>
                     <TabPane tab="网站" key="2">
                         {/* <Table dataSource={this.dataSource} columns={this.columns} />; */}

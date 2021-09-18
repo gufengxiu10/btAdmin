@@ -1,0 +1,61 @@
+.search {
+    background-color: #fff;
+    margin-bottom: 20px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.item-group {
+    .item {
+        border-radius: 10px;
+        width: 100%;
+        background-color: #fff;
+        margin-bottom: 20px;
+        // background-image: url(../../images/wallhaven-g828k3.jpg);
+        background-size: cover;
+        height: 200px;
+        display: flex;
+        box-shadow: 10px 10px 5px #888888;
+
+        .item-img {
+            width: 30%;
+            height: 100%;
+            // background-image: url(../../images/wallhaven-g828k3.jpg);
+            background-size: cover;
+            border-radius: 10px 0 0 10px;
+
+            >.loading {
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                line-height: 200px;
+
+                .img {
+                    background-size: cover;
+                    border-radius: 10px 0 0 10px;
+                }
+            }
+        }
+
+        .item-content {
+            padding: 10px;
+            width: 70%;
+            height: 100%;
+            // background-image: url(../../images/wallhaven-g828k3.jpg);
+            // background-size: cover;
+        }
+
+        .item-content-desc {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .item-content-action {
+            margin-top: 10px;
+        }
+    }
+}

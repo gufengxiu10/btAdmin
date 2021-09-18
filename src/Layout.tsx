@@ -1,12 +1,12 @@
 import React from "react";
 import '@/static/css/layout/Layout.scss';
 import LayoutSider from '@/layout/Sider';
-import Index from "@/page/Index";
 import Domain from "@/page/Domain"
-import BtSystem from "@/page/System"
-import { mysql as BtMysql } from "@/page/bt"
+import { mysql as BtMysql, system as BtSystem, base as BtBase } from "@/page/bt"
+import { index as BlogIndex, cate as BlogCate } from "@/page/blog"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Layout } from "antd";
+const { System: BtSystemMain, SystemEdit: BtSystemEdit } = BtSystem;
 const { Header, Sider, Content } = Layout;
 
 export default class BaseLayout extends React.Component<any, any>{
@@ -25,17 +25,26 @@ export default class BaseLayout extends React.Component<any, any>{
                         <Sider id="layout-sider"><LayoutSider /></Sider>
                         <Content id="layout-content">
                             <Switch>
+                                <Route path="/blog/list">
+                                    <BlogIndex />
+                                </Route>
+                                <Route path="/blog/cate">
+                                    <BlogCate />
+                                </Route>
                                 <Route path="/bt/index">
-                                    <Index />
+                                    <BtBase />
                                 </Route>
                                 <Route path="/bt/domain">
                                     <Domain />
                                 </Route>
                                 <Route path="/bt/system">
-                                    <BtSystem />
+                                    <BtSystemMain />
                                 </Route>
                                 <Route path="/bt/mysql">
                                     <BtMysql />
+                                </Route>
+                                <Route path="/bt/system/:id">
+                                    <BtSystemEdit />
                                 </Route>
                             </Switch>
                         </Content>

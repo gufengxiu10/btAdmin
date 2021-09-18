@@ -1,7 +1,7 @@
 import React from "react";
 import { Menu } from "antd";
 import "@/static/css/layout/Sider.scss";
-import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
+import { MailOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom"
 const { SubMenu } = Menu;
 export default class Sider extends React.Component<any, any>{
@@ -37,7 +37,24 @@ export default class Sider extends React.Component<any, any>{
                 selectedKeys={[this.state.current]}
                 mode="inline"
             >
-                <SubMenu key="sub1" icon={<MailOutlined />} title="宝塔管理">
+                <SubMenu key="sub1" icon={<MailOutlined />} title="博客管理">
+                    <Menu.Item key="sub1-1">
+                        <Link to="/blog/list">
+                            博文管理
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="sub1-2">
+                        <Link to="/bt/index">
+                            标签管理
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="sub1-3">
+                        <Link to="/blog/cate">
+                            分类管理
+                        </Link>
+                    </Menu.Item>
+                </SubMenu>
+                <SubMenu key="sub2" icon={<MailOutlined />} title="宝塔管理">
                     <Menu.Item key="1">
                         <Link to="/bt/index">
                             信息
@@ -56,6 +73,13 @@ export default class Sider extends React.Component<any, any>{
                     <Menu.Item key="4">
                         <Link to="/bt/mysql">
                             数据库管理
+                        </Link>
+                    </Menu.Item>
+                </SubMenu>
+                <SubMenu key="sub3" icon={<MailOutlined />} title="图库管理">
+                    <Menu.Item key="5">
+                        <Link to="/bt/index">
+                            第三方
                         </Link>
                     </Menu.Item>
                 </SubMenu>
