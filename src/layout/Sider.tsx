@@ -37,6 +37,13 @@ export default class Sider extends React.Component<any, any>{
                 selectedKeys={[this.state.current]}
                 mode="inline"
             >
+                <SubMenu key="conf" icon={<MailOutlined />} title="网站管理">
+                    <Menu.Item key="conf-1">
+                        <Link to="/blog/list">
+                            博文管理
+                        </Link>
+                    </Menu.Item>
+                </SubMenu>
                 <SubMenu key="sub1" icon={<MailOutlined />} title="博客管理">
                     <Menu.Item key="sub1-1">
                         <Link to="/blog/list">
@@ -44,7 +51,7 @@ export default class Sider extends React.Component<any, any>{
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="sub1-2">
-                        <Link to="/bt/index">
+                        <Link to="/blog/label">
                             标签管理
                         </Link>
                     </Menu.Item>
@@ -77,9 +84,9 @@ export default class Sider extends React.Component<any, any>{
                     </Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub3" icon={<MailOutlined />} title="图库管理">
-                    <Menu.Item key="5">
-                        <Link to="/bt/index">
-                            第三方
+                    <Menu.Item key="img-1">
+                        <Link to="/gallery/list">
+                            图库列表
                         </Link>
                     </Menu.Item>
                 </SubMenu>
